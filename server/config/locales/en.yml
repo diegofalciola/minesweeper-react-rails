@@ -16,18 +16,31 @@
 #
 # This would use the information in config/locales/es.yml.
 #
-# The following keys must be escaped otherwise they will not be retrieved by
-# the default I18n backend:
-#
-# true, false, on, off, yes, no
-#
-# Instead, surround them with single quotes.
-#
-# en:
-#   'true': 'foo'
-#
 # To learn more, please read the Rails Internationalization guide
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
+  authentication:
+    error: "Invalid %{authentication_keys} or password."
+  version:
+    expired: "Your current version has expired, please update to the latest one."
+  email_confirmation:
+    subject: "Email confirmation"
+    ask: "Please, confirm your email by clicking here:"
+    success: "Your email address has been successfully confirmed."
+    error: "Invalid confirmation token!"
+  reset_password:
+    subject: "Reset password confirmation"
+    sent: "Check your email to confirm the new password"
+    ask: "Please, confirm you have asked a password reset by clicking here:"
+    success: "Your password has been successfully updated."
+    error: "Invalid reset password token!"
+  privacy:
+    title_1: "Privacy policy"
+    content_1: "Place here your privacy policy."
+  terms:
+    title_1: "Terms and conditions of service"
+    content_1: "Place here your terms and conditions."
+  errors:
+    messages:
+      not_found: "Not found."
