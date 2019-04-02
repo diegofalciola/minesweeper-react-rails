@@ -1,18 +1,16 @@
-import { Route } from "react-router";
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { Match } from '../components/Match/match';
+import { Component } from 'react';
+import React from 'react';
 
-export default function configRoutes() {
-    return (
-        <Route component={MainLayout}>
-          <Route path="/sign_up" component={RegistrationsNew} />
-          <Route path="/sign_in" component={SessionsNew} />
-    
-          <Route path="/" component={AuthenticatedContainer} onEnter={_ensureAuthenticated}>
-            <IndexRoute component={HomeIndexView} />
-    
-            <Route path="/boards/:id" component={BoardsShowView}>
-              <Route path="cards/:id" component={CardsShowView}/>
-            </Route>
-          </Route>
-        </Route>
-      );
+export class Routes extends React.Component {
+    public render() {
+        return  (
+          <Router>
+            <Switch>
+              <Route exact path="/" component={ Match } />
+            </Switch>
+          </Router>
+        )
+      }
 }
