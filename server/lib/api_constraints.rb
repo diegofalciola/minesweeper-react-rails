@@ -9,6 +9,6 @@ class ApiConstraints
       (req.respond_to?('headers') &&
        req.headers.key?('Accept') &&
        req.headers['Accept'].eql?(
-         "application/vnd.minesweeper.v#{@version}"))
+         "application/vnd.railsapibase.v#{@version}"))
   end
 end

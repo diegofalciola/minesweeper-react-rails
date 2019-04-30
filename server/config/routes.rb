@@ -16,6 +16,7 @@ Rails.application.routes.draw do
       delete 'users/logout'         => 'sessions#destroy'
       post   'users/reset_password' => 'users#reset_password'
       resources :users, only: [:create, :destroy]
+      resources :notes
     end
   end
 

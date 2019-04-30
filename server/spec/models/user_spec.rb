@@ -10,6 +10,7 @@ describe User do
   end
 
   describe 'responds to attrs' do
+    it { expect(user).to respond_to(:notes) }
     it { expect(user).to be_valid }
   end
 end

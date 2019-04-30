@@ -6,20 +6,18 @@ default: &default
 
 development:
   <<: *default
-  database: minesweeper_development
-  username: postgres
-  password: password
-  host: 127.0.0.1
+  database: railsapibase_development
+  username: railsapibase_user
+  password: railsapibase_pass
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 test:
   <<: *default
-  database: minesweeper_test
-  username: postgres
-  password: password
-  host: 127.0.0.1
+  database: railsapibase_test
+  username: railsapibase_user
+  password: railsapibase_pass
 
 production:
   <<: *default

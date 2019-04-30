@@ -5,7 +5,7 @@ describe Api::V1::UsersController do
   let(:user_attr) { attributes_for :user }
   before(:each) do
     ENV['SECRET_API_KEY'] = nil
-    request.headers['Accept'] = 'application/vnd.minesweeper.v1'
+    request.headers['Accept'] = 'application/vnd.railsapibase.v1'
   end
 
   it 'routes correctly' do
@@ -125,6 +125,9 @@ describe Api::V1::UsersController do
   describe 'DELETE /users/:id #destroy' do
     context 'when is deleted' do
       before(:each) do
+        note = create :note
+        note.user_id = user.id
+        note.save
         signed_delete :destroy, params: { id: 'not_used' }
       end
 
