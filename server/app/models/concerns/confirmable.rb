@@ -11,9 +11,9 @@ module Concerns
     private
 
     def ask_email_confirmation
-      self.confirmation_sent_at = DateTime.current
-      save
-      UserMailer.ask_email_confirmation(self).deliver
+      # self.confirmation_sent_at = DateTime.current
+      # save
+      # UserMailer.ask_email_confirmation(self).deliver
     end
   end
 end
