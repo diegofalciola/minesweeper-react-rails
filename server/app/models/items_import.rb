@@ -36,10 +36,7 @@ class ItemsImport
 
       if (spreadsheet.last_row > 3)
         (3..spreadsheet.last_row).map do |i|
-          row = Hash[[header, spreadsheet.row(i)].transpose]
-          item = Item.find_by_id(row["id"]) || Item.new
-          item.attributes = row.to_hash
-          item
+          puts i.to_s
         end
       end
 

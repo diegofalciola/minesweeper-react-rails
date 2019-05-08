@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190507210526) do
+ActiveRecord::Schema.define(version: 20190507212138) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -28,6 +28,24 @@ ActiveRecord::Schema.define(version: 20190507210526) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_notes_on_user_id"
+  end
+
+  create_table "transactions", force: :cascade do |t|
+    t.date "transaction_date"
+    t.string "invoice_number"
+    t.string "customer_name"
+    t.string "receipt"
+    t.string "bank"
+    t.date "receipt_date"
+    t.decimal "amount"
+    t.decimal "payment_amount"
+    t.decimal "payment_amount2"
+    t.decimal "balance"
+    t.boolean "is_import"
+    t.bigint "customer_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["customer_id"], name: "index_transactions_on_customer_id"
   end
 
   create_table "users", id: :serial, force: :cascade do |t|
@@ -49,4 +67,5 @@ ActiveRecord::Schema.define(version: 20190507210526) do
   end
 
   add_foreign_key "notes", "users"
+  add_foreign_key "transactions", "customers"
 end
