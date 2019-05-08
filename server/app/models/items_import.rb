@@ -13,6 +13,8 @@ class ItemsImport
     end
   end
 
+  private
+
   def process_file(filePath)
     spreadsheet = Roo::Excel.new(filePath)
     if spreadsheet.sheet(0) != nil
@@ -36,15 +38,30 @@ class ItemsImport
 
       if (spreadsheet.last_row > 3)
         (3..spreadsheet.last_row).map do |i|
-          puts i.to_s
+          process_row(spreadsheet.row(i))
+          # row = Hash[[header, spreadsheet.row(i)].transpose]
+          # item = Item.find_by_id(row["id"]) || Item.new
+          # item.attributes = row.to_hash
+          # item
+
         end
       end
-
-
     end
   end
 
-  private
+  def process_row(row)
+    transaction = Transaction.new
+    puts row
+    keys = ["invoice_number", "transaction_date", "customer_name", "amount", "payment_amount", "balance", "receipt", "bank", "receipt_date", "payment_amount2"]
+    hash_row = Hash[[keys, row[0..9]].transpose]
+    transaction.attributes = hash_row.to_hash
+
+    puts transaction.attributes
+    # invoice_number = row[0]
+    # transaction_date = row[1]
+    # customer_name = row[2]
+
+  end
 
   def extract_customer_name(sheet)
     sheet.cell(1,1)
