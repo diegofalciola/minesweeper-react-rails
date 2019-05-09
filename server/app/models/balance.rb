@@ -12,7 +12,7 @@ class Balance < ApplicationRecord
     #                             .sum(:amount)
 
     bills_total = Transaction
-                    .where("transaction_date > ?", Date.today - 30)
+                    .where("date > ?", Date.today - 30)
                     .where(:customer_id => self.customer_id)
                     .sum(:amount)
 

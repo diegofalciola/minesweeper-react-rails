@@ -58,9 +58,9 @@ class ItemsImport
     if is_row_valid(row)
       Transaction.create({
                              :customer_id => customer_id,
-                             :type => transaction_type
+                             :transaction_type => transaction_type,
                              :invoice_number => row[0],
-                             :transaction_date => parse_date(row[1]),
+                             :date => parse_date(row[1]),
                              :customer_name => row[2],
                              :amount => row[3],
                              :balance => row[4],
