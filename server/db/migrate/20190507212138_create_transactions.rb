@@ -4,7 +4,6 @@ class CreateTransactions < ActiveRecord::Migration[5.1]
       t.date        :date
       t.integer     :transaction_type
       t.string      :invoice_number
-      t.string      :customer_name
       t.string      :receipt
       t.string      :bank
       t.date        :receipt_date

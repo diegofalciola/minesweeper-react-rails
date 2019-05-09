@@ -61,7 +61,6 @@ class ItemsImport
                              :transaction_type => transaction_type,
                              :invoice_number => row[0],
                              :date => parse_date(row[1]),
-                             :customer_name => row[2],
                              :amount => row[3],
                              :balance => row[4],
                              :receipt => row[5],
