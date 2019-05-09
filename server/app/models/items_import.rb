@@ -26,30 +26,29 @@ class ItemsImport
 
   def process_file(customer_name, file_path)
     spreadsheet = Roo::Excel.new(file_path)
+    customer_id = verify_customer_name(customer_name)
 
     [0, 1].each do |sheet_number|
-      process_sheet(customer_name, spreadsheet.sheet(sheet_number), sheet_number)
+      process_sheet(customer_id, spreadsheet.sheet(sheet_number), sheet_number)
     end
+
+    # create balance entry
+    Balance.create({
+                       :customer_id => customer_id
+                   })
+
 
   end
 
-  def process_sheet(customer_name, sheet, transaction_type)
+  def process_sheet(customer_id, sheet, transaction_type)
     #sheet has rows
     if sheet.last_row
       # we are duplicating this, no need. Find a way to do this only once
-      customer_id = verify_customer_name(customer_name)
-
       if sheet.last_row > 3
         (4..sheet.last_row).map do |i|
           process_row(customer_id, transaction_type, sheet.row(i))
         end
       end
-
-      # create balance entry
-      Balance.create({
-          :customer_id => customer_id
-                               })
-
     end
   end
 

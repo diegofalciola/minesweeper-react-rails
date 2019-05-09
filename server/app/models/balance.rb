@@ -6,17 +6,15 @@ class Balance < ApplicationRecord
   end
 
   def calculate_balance
-    # self.past_due_balance = Transaction
-    #                             .where("transaction_date > ?", Date.today - 30)
-    #                             .where(:customer_id => self.customer_id)
-    #                             .sum(:amount)
+    self.white_balance = Transaction
+                             .where(:customer_id => self.customer_id)
+                             .where(:transaction_type => 0)
+                             .pluck("COALESCE(SUM(invoice_amount),0) + COALESCE(SUM(payment_amount),0)*-1")[0]
 
-    invoice_amount, payment_amount = Transaction
-                    .where("invoice_date > ?", Date.today - 30)
-                    .where(:customer_id => self.customer_id)
-                    .pluck(:invoice_amount, :payment_amount)
-
-    puts self.customer_id
-
+    self.black_balance = Transaction
+                             .where(:customer_id => self.customer_id)
+                             .where(:transaction_type => 1)
+                             .pluck("COALESCE(SUM(invoice_amount),0) + COALESCE(SUM(payment_amount),0)*-1")[0]
   end
 end
+
