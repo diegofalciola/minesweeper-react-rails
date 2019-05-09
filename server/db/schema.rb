@@ -42,7 +42,8 @@ ActiveRecord::Schema.define(version: 20190508231913) do
   end
 
   create_table "transactions", force: :cascade do |t|
-    t.date "transaction_date"
+    t.date "date"
+    t.integer "type"
     t.string "invoice_number"
     t.string "customer_name"
     t.string "receipt"
