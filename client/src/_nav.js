@@ -10,10 +10,15 @@ export default {
       },
     },
     {
+      name: 'Cuentas Corrientes',
+      url: '/accounts',
+      icon: 'icon-drop',
+    },
+    {
       name: 'Valores por Cobrar',
       url: '/payments',
       icon: 'icon-drop',
-     },
+    },
     {
       title: true,
       name: 'Theme',

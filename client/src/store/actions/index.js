@@ -1,0 +1,3 @@
+export {
+    getAccounts
+} from './accounts'
