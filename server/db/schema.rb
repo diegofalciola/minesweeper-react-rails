@@ -42,17 +42,15 @@ ActiveRecord::Schema.define(version: 20190508231913) do
   end
 
   create_table "transactions", force: :cascade do |t|
-    t.date "date"
-    t.integer "type"
+    t.integer "transaction_type"
     t.string "invoice_number"
-    t.string "customer_name"
-    t.string "receipt"
-    t.string "bank"
-    t.date "receipt_date"
-    t.decimal "amount"
-    t.decimal "payment_amount"
-    t.decimal "payment_amount2"
+    t.date "invoice_date"
+    t.decimal "invoice_amount"
     t.decimal "balance"
+    t.string "payment_receipt"
+    t.string "payment_bank"
+    t.date "payment_date"
+    t.decimal "payment_amount"
     t.boolean "is_import"
     t.bigint "customer_id"
     t.datetime "created_at", null: false

@@ -11,8 +11,8 @@ class ItemsImport
 
     files.each do |file|
       puts "Processing #{file}..."
-      process_file(file)
-
+      customer_name = File.basename(file, ".*")
+      process_file(customer_name, file)
     end
   end
 
@@ -21,26 +21,25 @@ class ItemsImport
   def truncate_tables
     Transaction.delete_all
     Balance.delete_all
+    # Customer.delete_all
   end
 
-  def process_file(filePath)
-    spreadsheet = Roo::Excel.new(filePath)
+  def process_file(customer_name, file_path)
+    spreadsheet = Roo::Excel.new(file_path)
 
     [0, 1].each do |sheet_number|
-      process_sheet(spreadsheet.sheet(sheet_number), sheet_number)
+      process_sheet(customer_name, spreadsheet.sheet(sheet_number), sheet_number)
     end
 
   end
 
-  def process_sheet(sheet, transaction_type)
+  def process_sheet(customer_name, sheet, transaction_type)
     #sheet has rows
-    if (sheet.last_row)
-      customerName = extract_customer_name(sheet)
-
+    if sheet.last_row
       # we are duplicating this, no need. Find a way to do this only once
-      customer_id = verify_customer_name(customerName)
+      customer_id = verify_customer_name(customer_name)
 
-      if (sheet.last_row > 3)
+      if sheet.last_row > 3
         (4..sheet.last_row).map do |i|
           process_row(customer_id, transaction_type, sheet.row(i))
         end
@@ -60,20 +59,20 @@ class ItemsImport
                              :customer_id => customer_id,
                              :transaction_type => transaction_type,
                              :invoice_number => row[0],
-                             :date => parse_date(row[1]),
-                             :amount => row[3],
+                             :invoice_date => parse_date(row[1]),
+                             :invoice_amount => row[3],
                              :balance => row[4],
-                             :receipt => row[5],
-                             :bank => row[6],
-                             :receipt_date => parse_date(row[7]),
-                             :payment_amount2 => row[8]
+                             :payment_receipt => row[5],
+                             :payment_bank => row[6],
+                             :payment_date => parse_date(row[7]),
+                             :payment_amount => row[8]
                          })
 
     end
   end
 
   def parse_date(date)
-    if (!date)
+    if date.nil?
       return nil
     end
 
@@ -86,10 +85,6 @@ class ItemsImport
 
   def is_row_valid(row)
     !(!row[3] && !row[4])
-  end
-
-  def extract_customer_name(sheet)
-    sheet.cell(1,1)
   end
 
   def verify_customer_name(customer_name)

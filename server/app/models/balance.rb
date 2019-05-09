@@ -11,10 +11,12 @@ class Balance < ApplicationRecord
     #                             .where(:customer_id => self.customer_id)
     #                             .sum(:amount)
 
-    bills_total = Transaction
-                    .where("date > ?", Date.today - 30)
+    invoice_amount, payment_amount = Transaction
+                    .where("invoice_date > ?", Date.today - 30)
                     .where(:customer_id => self.customer_id)
-                    .sum(:amount)
+                    .pluck(:invoice_amount, :payment_amount)
+
+    puts self.customer_id
 
   end
 end
