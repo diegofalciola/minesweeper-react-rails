@@ -2,9 +2,12 @@
 class ItemsImport
   include ActiveModel::Model
   require 'roo-xls'
+  require 'date'
 
   def import
     files = Dir["/mnt/c/rails/files/*.xls"]
+
+    truncate_tables
 
     files.each do |file|
       puts "Processing #{file}..."
@@ -14,6 +17,11 @@ class ItemsImport
   end
 
   private
+
+  def truncate_tables
+    Transaction.delete_all
+    Balance.delete_all
+  end
 
   def process_file(filePath)
     spreadsheet = Roo::Excel.new(filePath)
@@ -34,84 +42,69 @@ class ItemsImport
       customerName = extract_customer_name(spreadsheet.sheet(sheetNumber))
 
       # we are duplicating this, no need. Find a way to do this only once
-      verify_customer_name(customerName)
+      customer_id = verify_customer_name(customerName)
 
       if (spreadsheet.last_row > 3)
-        (3..spreadsheet.last_row).map do |i|
-          process_row(spreadsheet.row(i))
-          # row = Hash[[header, spreadsheet.row(i)].transpose]
-          # item = Item.find_by_id(row["id"]) || Item.new
-          # item.attributes = row.to_hash
-          # item
-
+        (4..spreadsheet.last_row).map do |i|
+          process_row(customer_id, spreadsheet.row(i))
         end
       end
+
+      # create balance entry
+      Balance.create({
+          :customer_id => customer_id
+                               })
+
     end
   end
 
-  def process_row(row)
-    transaction = Transaction.new
-    puts row
-    keys = ["invoice_number", "transaction_date", "customer_name", "amount", "payment_amount", "balance", "receipt", "bank", "receipt_date", "payment_amount2"]
-    hash_row = Hash[[keys, row[0..9]].transpose]
-    transaction.attributes = hash_row.to_hash
+  def process_row(customer_id, row)
+    if is_row_valid(row)
+      Transaction.create({
+                             :customer_id => customer_id,
+                             :invoice_number => row[0],
+                             :transaction_date => parse_date(row[1]),
+                             :customer_name => row[2],
+                             :amount => row[3],
+                             :balance => row[4],
+                             :receipt => row[5],
+                             :bank => row[6],
+                             :receipt_date => parse_date(row[7]),
+                             :payment_amount2 => row[8]
+                         })
 
-    puts transaction.attributes
-    # invoice_number = row[0]
-    # transaction_date = row[1]
-    # customer_name = row[2]
+    end
+  end
 
+  def parse_date(date)
+    if (!date)
+      return nil
+    end
+
+    begin
+      Date.parse(date.to_s)
+    rescue StandardError => e
+      nil
+    end
+  end
+
+  def is_row_valid(row)
+    !(!row[3] && !row[4])
   end
 
   def extract_customer_name(sheet)
     sheet.cell(1,1)
   end
 
-  def verify_customer_name(customerName)
-    customer = Customer.find_by(name: customerName)
+  def verify_customer_name(customer_name)
+    customer = Customer.find_by(name: customer_name)
 
-    if (customer)
-      puts "existe"
-    else
-      puts "doesn't exist"
+    if (!customer)
+      customer = Customer.create( {
+          :name => customer_name
+                       })
     end
+
+    customer.id
   end
-
-  # def open_spreadsheet
-  #   case File.extname(file.original_filename)
-  #   when ".xls" then Roo::Excel.new(file.path, nil, :ignore)
-  #   when ".xlsx" then Roo::Excelx.new(file.path)
-  #   else raise "Unknown file type: #{file.original_filename}"
-  #   end
-  # end
-  #
-  # def load_imported_items
-  #   spreadsheet = open_spreadsheet
-  #   header = spreadsheet.row(5)
-  #   (6..spreadsheet.last_row).map do |i|
-  #     row = Hash[[header, spreadsheet.row(i)].transpose]
-  #     item = Item.find_by_id(row["id"]) || Item.new
-  #     item.attributes = row.to_hash
-  #     item
-  #   end
-  # end
-  #
-  # def imported_items
-  #   @imported_items ||= load_imported_items
-  # end
-  #
-  # def save
-  #   if imported_items.map(&:valid?).all?
-  #     imported_items.each(&:save!)
-  #     true
-  #   else
-  #     imported_items.each_with_index do |item, index|
-  #       item.errors.full_messages.each do |msg|
-  #         errors.add :base, "Row #{index + 6}: #{msg}"
-  #       end
-  #     end
-  #     false
-  #   end
-  # end
-
 end
