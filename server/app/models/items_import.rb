@@ -25,28 +25,24 @@ class ItemsImport
 
   def process_file(filePath)
     spreadsheet = Roo::Excel.new(filePath)
-    if spreadsheet.sheet(0) != nil
-      process_sheet(spreadsheet, 0)
+
+    [0, 1].each do |sheet_number|
+      process_sheet(spreadsheet.sheet(sheet_number), sheet_number)
     end
 
-    if spreadsheet.sheet(1) != nil
-      process_sheet(spreadsheet, 1)
-    end
   end
 
-  def process_sheet(spreadsheet, sheetNumber)
-    puts "Processing sheet #{sheetNumber}"
-
+  def process_sheet(sheet, transaction_type)
     #sheet has rows
-    if (spreadsheet.last_row)
-      customerName = extract_customer_name(spreadsheet.sheet(sheetNumber))
+    if (sheet.last_row)
+      customerName = extract_customer_name(sheet)
 
       # we are duplicating this, no need. Find a way to do this only once
       customer_id = verify_customer_name(customerName)
 
-      if (spreadsheet.last_row > 3)
-        (4..spreadsheet.last_row).map do |i|
-          process_row(customer_id, spreadsheet.row(i))
+      if (sheet.last_row > 3)
+        (4..sheet.last_row).map do |i|
+          process_row(customer_id, transaction_type, sheet.row(i))
         end
       end
 
@@ -58,10 +54,11 @@ class ItemsImport
     end
   end
 
-  def process_row(customer_id, row)
+  def process_row(customer_id, transaction_type, row)
     if is_row_valid(row)
       Transaction.create({
                              :customer_id => customer_id,
+                             :type => transaction_type
                              :invoice_number => row[0],
                              :transaction_date => parse_date(row[1]),
                              :customer_name => row[2],
