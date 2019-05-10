@@ -16,10 +16,10 @@ ActiveRecord::Schema.define(version: 20190508231913) do
   enable_extension "plpgsql"
 
   create_table "balances", force: :cascade do |t|
-    t.decimal "balance"
+    t.decimal "white_balance"
+    t.decimal "black_balance"
     t.decimal "past_due_balance"
     t.date "last_transaction_date"
-    t.integer "type"
     t.bigint "customer_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
