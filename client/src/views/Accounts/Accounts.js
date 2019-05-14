@@ -6,7 +6,22 @@ class Accounts extends Component {
     accounts: [] 
   }
 
-  componentDidMount(){
+  constructor(props) {
+    super(props);
+
+    this.shouldComponentRender = this.shouldComponentRender.bind(this);
+  }
+
+  componentWillMount() {
+    const {getAccounts} = this.props;
+    getAccounts();
+  }
+
+  shouldComponentRender() {
+      const {pending} = this.props;``
+      if(this.pending === false) return false;
+      // more tests
+      return true;
   }
 
   render() {

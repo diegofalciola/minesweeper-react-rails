@@ -19,3 +19,23 @@ function getAccountsFailed(error) {
         error
     }
 }
+
+function getAccounts() {
+    return dispatch => {
+        dispatch(getAccountsPending());
+        fetch('http://localhost:4000/balances')
+            .then(res => res.json())
+            .then(res => {
+                if(res.error) {
+                    throw (res.error);
+                }
+                dispatch(getAccountsSuccess(res))
+                return res;
+            })
+            .catch(error => {
+                dispatch(getAccountsFailed(error))
+            })
+    }
+}
+
+export default getAccounts;
