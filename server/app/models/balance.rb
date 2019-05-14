@@ -1,6 +1,8 @@
 class Balance < ApplicationRecord
   require 'date'
 
+  belongs_to :customer
+
   before_create do
     self.calculate_balance
   end
