@@ -1,4 +1,5 @@
 import * as actionTypes from './actionTypes'
+import API from '../../api';
 
 function getAccountsPending() {
     return {
@@ -23,7 +24,7 @@ function getAccountsFailed(error) {
 function getAccounts() {
     return dispatch => {
         dispatch(getAccountsPending());
-        fetch('http://localhost:4000/balances')
+        API.get('/balances')
             .then(res => res.json())
             .then(res => {
                 if(res.error) {
