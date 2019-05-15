@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
 import { Badge, Card, CardBody, CardHeader, Col, Pagination, PaginationItem, PaginationLink, Row, Table } from 'reactstrap';
+import {getAccountsError, getAccountsPending, getAccounts} from "../../store/reducers/accounts";
+import getAccountsAction from "../../store/actions/accounts";
+import {bindActionCreators} from "redux";
+import {connect} from "react-redux";
 
 class Accounts extends Component {
   state = {
     accounts: [] 
-  }
+  };
 
   constructor(props) {
     super(props);
@@ -13,15 +17,16 @@ class Accounts extends Component {
   }
 
   componentWillMount() {
+    debugger;
     const {getAccounts} = this.props;
     getAccounts();
   }
 
   shouldComponentRender() {
-      const {pending} = this.props;``
-      if(this.pending === false) return false;
+      // const {pending} = this.props;
+      // if(this.pending === false) return false;
       // more tests
-      return true;
+      // return true;
   }
 
   render() {
@@ -115,4 +120,17 @@ class Accounts extends Component {
   }
 }
 
-export default Accounts;
+const mapStateToProps = state => ({
+  error: getAccountsError(state),
+  products: getAccounts(state),
+  pending: getAccountsPending(state)
+});
+
+const mapDispatchToProps = dispatch => bindActionCreators({
+  getAccounts: getAccountsAction
+}, dispatch);
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Accounts);

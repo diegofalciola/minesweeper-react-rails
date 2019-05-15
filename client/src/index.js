@@ -9,11 +9,11 @@ import * as serviceWorker from './serviceWorker';
 import { createStore, applyMiddleware, compose, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
-import accountReducer from './store/reducers/accounts'
+import accountsReducer from './store/reducers/accounts'
 
 const rootReducer = combineReducers({
-    accounts: accountReducer
-})
+    accounts: accountsReducer
+}) 
 
 const composeEnhancers = process.env.NODE_ENV === 'development' ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ : null || compose;
 

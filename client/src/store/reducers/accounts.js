@@ -5,8 +5,8 @@ const initialState = {
     accounts: [],
     error: null
 }
-
-const accountsReducer = (state = initialState, action) => {
+ 
+export default function accountsReducer(state = initialState, action) {
     switch(action.type) {
         case actionTypes.GET_ACCOUNTS_PENDING:
             return {
