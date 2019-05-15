@@ -17,7 +17,6 @@ class Accounts extends Component {
   }
 
   componentWillMount() {
-    debugger;
     const {getAccounts} = this.props;
     getAccounts();
   }
