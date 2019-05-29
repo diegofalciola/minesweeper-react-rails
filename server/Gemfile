@@ -24,14 +24,11 @@ gem 'mail', '2.6.6.rc1'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
-# Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
-# gem 'rack-cors'
-
 # Interface with Excel spreadsheets
 gem "roo", "~> 2.8.0"
 gem "roo-xls", "~> 1.2.0"
 
-# Cors
+# Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
 gem 'rack-cors'
 
 group :development, :test do
