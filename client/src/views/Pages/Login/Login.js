@@ -1,8 +1,41 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Card, CardBody, CardGroup, Col, Container, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Row } from 'reactstrap';
+import { checkValidity, updateObject } from '../../../shared/utility'
 
 class Login extends Component {
+  state = {
+    email: {
+      value: '',
+      validation: {
+          required: true,
+          isEmail: true
+      },
+      valid: false,
+      touched: false
+    },
+    password: {
+      value: '',
+      validation: {
+          required: true,
+          minLength: 6
+      },
+      valid: false,
+      touched: false
+    }
+  }
+
+  inputChangedHandler = ( event, controlName ) => {
+    const updatedControls = updateObject( this.state.controls, {
+        [controlName]: updateObject( this.state.controls[controlName], {
+            value: event.target.value,
+            valid: checkValidity( event.target.value, this.state.controls[controlName].validation ),
+            touched: true
+        } )
+    } );
+    this.setState( { controls: updatedControls } );
+  }
+
   render() {
     return (
       <div className="app flex-row align-items-center">
@@ -21,7 +54,13 @@ class Login extends Component {
                             <i className="icon-user"></i>
                           </InputGroupText>
                         </InputGroupAddon>
-                        <Input type="text" placeholder="Username" autoComplete="username" />
+                        <Input
+                          key="username"
+                          value={this.state.email.value}
+                          touched={this.state.email.touched}
+                          changed={( event ) => this.inputChangedHandler( event, "username" )} 
+                          type="text" 
+                          placeholder="Username" />
                       </InputGroup>
                       <InputGroup className="mb-4">
                         <InputGroupAddon addonType="prepend">
@@ -29,7 +68,13 @@ class Login extends Component {
                             <i className="icon-lock"></i>
                           </InputGroupText>
                         </InputGroupAddon>
-                        <Input type="password" placeholder="Password" autoComplete="current-password" />
+                        <Input 
+                          key="password"
+                          value={this.state.password.value}
+                          touched={this.state.password.touched}
+                          changed={( event ) => this.inputChangedHandler( event, "password" )} 
+                          type="text" 
+                          placeholder="Password"  />
                       </InputGroup>
                       <Row>
                         <Col xs="6">
